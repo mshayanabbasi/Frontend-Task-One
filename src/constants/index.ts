@@ -1,3 +1,1 @@
-// const usersData = [];
-
-// export { usersData };
+export {};

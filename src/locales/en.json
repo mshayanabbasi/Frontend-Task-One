@@ -1,3 +1,9 @@
 {
-    "users": "Users"
+    "users": "Users",
+    "addUser": "Add User",
+    "downloadCSV": "Download CSV",
+    "search": "Search",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete"
 }

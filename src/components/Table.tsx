@@ -1,10 +1,11 @@
 //@ts-nocheck
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, Column } from "react-table";
 import ReactPaginate from "react-paginate";
+import { Users } from "../types/user.types";
 
 interface TableProps {
-  data: Array<[]>;
-  columns: Array<[]>;
+  data: Array<Users>;
+  columns: Column<Users[]>[];
   count?: number;
   perPage?: number;
 }
@@ -34,19 +35,16 @@ const Table: React.FC<TableProps> = ({
 
   return (
     <>
-      <table {...getTableProps()} className="w-full overflow-y-scroll">
+      <table
+        {...getTableProps()}
+        className="w-full overflow-y-scroll border-separate border bg-gray-300"
+      >
         <thead className="bg-[#FEFEFE]">
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, index) => (
                 <th
-                  className={`text-[#1E1E1E] text-base font-normal py-3 px-3 text-left ${
-                    index === 0
-                      ? "rounded-tl-2xl rounded-bl-2xl"
-                      : headerGroup.headers.length - 1 === index
-                      ? "rounded-tr-2xl rounded-br-2xl"
-                      : ""
-                  }`}
+                  className={`text-[#1E1E1E] text-base font-normal py-3 px-3 text-left`}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}
@@ -59,56 +57,14 @@ const Table: React.FC<TableProps> = ({
           {page.map((row) => {
             prepareRow(row);
             return (
-              <tr {...row.getRowProps()} className="bg-[#FEFEFE]">
+              <tr
+                {...row.getRowProps()}
+                className={row.index % 2 === 0 ? "bg-[#F2F2F2]" : "bg-white"}
+              >
                 {row.cells.map((cell, cellIndex) => {
-                  // if (cell.column.Header === "Status" && !noDropdown) {
                   return (
                     <td
-                      className={`text-[#1E1E1E] text-base font-normal px-4 !h-24 ${
-                        cellIndex === 0
-                          ? "rounded-tl-2xl rounded-bl-2xl"
-                          : row.cells.length - 1 === cellIndex
-                          ? "rounded-tr-2xl rounded-br-2xl"
-                          : ""
-                      }`}
-                      {...cell.getCellProps()}
-                    >
-                      {/* {cell.row.original.is_active ? (
-                          <StatusCell
-                            value={
-                              cell.row.original.is_active === false
-                                ? "disabled"
-                                : "enabled"
-                            }
-                            onStatusChange={(newStatus) =>
-                              handleStatusChange(cell, newStatus)
-                            }
-                          />
-                        ) : (
-                          <DisableStatusCell
-                            value={
-                              cell.row.original.is_active === false
-                                ? "disabled"
-                                : "enabled"
-                            }
-                            onStatusChange={(newStatus) =>
-                              handleStatusChange(cell, newStatus)
-                            }
-                          />
-                        )} */}
-                    </td>
-                  );
-                  // }
-
-                  return (
-                    <td
-                      className={`text-[#1E1E1E] text-base font-normal px-4 !h-24 ${
-                        cellIndex === 0
-                          ? "rounded-tl-2xl rounded-bl-2xl"
-                          : row.cells.length - 1 === cellIndex
-                          ? "rounded-tr-2xl rounded-br-2xl"
-                          : ""
-                      }`}
+                      className={`text-[#1E1E1E] text-base font-normal px-4 !h-24`}
                       {...cell.getCellProps()}
                     >
                       {cell.render("Cell")}
@@ -120,27 +76,6 @@ const Table: React.FC<TableProps> = ({
           })}
         </tbody>
       </table>
-      {/* {data.length > 10 && (
-        <div className="flex justify-center w-full my-10">
-          <div className="bg-white rounded-2xl">
-            {pageNumbers.map(pageNumber => (
-              <button
-                className={`py-3 px-6 hover:border-transparent rounded-2xl font-normal focus:outline-none text-sm ${
-                  pageIndex + 1 === pageNumber
-                    ? 'bg-CCDF9C text-white'
-                    : 'bg-white text-1E1E1E'
-                }`}
-                key={pageNumber}
-                onClick={() => {
-                  gotoPage(pageNumber - 1);
-                }} // subtract 1 because pageIndex is 0-based
-              >
-                {pageNumber}
-              </button>
-            ))}
-          </div>
-        </div>
-      )} */}
       {count > 10 && (
         <div className="flex justify-center w-full my-10">
           <ReactPaginate
