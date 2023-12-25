@@ -3,12 +3,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Button, Header, Table } from "../../components";
 import { IoMdAdd } from "react-icons/io";
 import string from "../../locales/string";
-import { columnsData } from "./columns";
+import { Columns } from "./columns";
 
 interface UsersProps {}
 
 const Users: React.FC<UsersProps> = () => {
   const [usersData, setUsersData] = useState([]);
+  const columnsData = Columns();
   const [search, setSearch] = useState("");
 
   const handleFetch = async () => {
@@ -32,8 +33,8 @@ const Users: React.FC<UsersProps> = () => {
   }, []);
 
   const columns = useMemo(() => {
-    return columnsData;
-  }, [columnsData]);
+    return columnsData.columnsData;
+  }, [columnsData.columnsData]);
 
   return (
     <div>
@@ -41,10 +42,11 @@ const Users: React.FC<UsersProps> = () => {
       <div className="py-10 px-7">
         <div className="flex justify-end mb-10">
           <Button
-            title={"Add User"}
+            title={string.addUser}
             className="bg-c_19A7D8 p-3 flex items-center rounded-md"
             textClassName="text-white font-medium"
             icon={<IoMdAdd size={24} color={"white"} />}
+            onClick={() => {}}
           />
         </div>
         <div className="bg-white">
@@ -59,6 +61,7 @@ const Users: React.FC<UsersProps> = () => {
                 className="bg-[#4DBE73] p-3"
                 textClassName="text-white font-medium"
                 title={string.downloadCSV}
+                onClick={() => {}}
               />
               <input
                 placeholder={string.search}
