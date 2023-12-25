@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Button } from "../../components";
 import DeleteModal from "../../components/DeleteModal";
 import string from "../../locales/string";
+import EditModal from "../../components/EditModal";
 
 export const Columns = () => {
   const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
   const columnsData = [
     {
       Header: "Name",
@@ -79,7 +82,7 @@ export const Columns = () => {
                 title={string.edit}
                 className="bg-[#4BBD72] p-2 mr-3"
                 textClassName="text-white"
-                onClick={() => {}}
+                onClick={() => setEditModal(!editModal)}
               />
               <Button
                 title={string.delete}
@@ -93,6 +96,9 @@ export const Columns = () => {
                 open={deleteModal}
                 setOpen={() => setDeleteModal(false)}
               />
+            ) : null}
+            {editModal ? (
+              <EditModal open={editModal} setOpen={() => setEditModal(false)} />
             ) : null}
           </>
         );

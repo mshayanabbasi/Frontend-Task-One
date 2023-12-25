@@ -44,7 +44,7 @@ const Table: React.FC<TableProps> = ({
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column, index) => (
                 <th
-                  className={`text-[#1E1E1E] text-base font-normal py-3 px-3 text-left`}
+                  className={`text-[#1E1E1E] text-base font-bold py-3 px-3 text-left`}
                   {...column.getHeaderProps()}
                 >
                   {column.render("Header")}

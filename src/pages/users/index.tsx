@@ -4,11 +4,13 @@ import { Button, Header, Table } from "../../components";
 import { IoMdAdd } from "react-icons/io";
 import string from "../../locales/string";
 import { Columns } from "./columns";
+import AddModal from "../../components/AddModal";
 
 interface UsersProps {}
 
 const Users: React.FC<UsersProps> = () => {
   const [usersData, setUsersData] = useState([]);
+  const [open, setOpen] = useState(false);
   const columnsData = Columns();
   const [search, setSearch] = useState("");
 
@@ -46,7 +48,7 @@ const Users: React.FC<UsersProps> = () => {
             className="bg-c_19A7D8 p-3 flex items-center rounded-md"
             textClassName="text-white font-medium"
             icon={<IoMdAdd size={24} color={"white"} />}
-            onClick={() => {}}
+            onClick={() => setOpen(!open)}
           />
         </div>
         <div className="bg-white">
@@ -77,6 +79,7 @@ const Users: React.FC<UsersProps> = () => {
           </div>
         </div>
       </div>
+      {open ? <AddModal open={open} setOpen={() => setOpen(false)} /> : null}
     </div>
   );
 };
