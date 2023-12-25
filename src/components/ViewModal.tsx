@@ -2,12 +2,9 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import string from "../locales/string";
 import { IoMdClose } from "react-icons/io";
-import Button from "./Button";
 import Dropdown from "./Dropdown";
-import { TiCancel } from "react-icons/ti";
 import Input from "./Input";
 import {
-  API_URL,
   CITIES,
   COUNTRY,
   EMAIL_VERIFIED,
@@ -15,25 +12,20 @@ import {
   PROFESSION,
   STATUS,
 } from "../constants";
-import { toast } from "react-toastify";
 import { Users } from "../types/user.types";
 
 interface EditModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   user: Users;
-  getUsers: () => void;
 }
 
-const EditModal: React.FC<EditModalProps> = ({
+const ViewModal: React.FC<EditModalProps> = ({
   open,
   setOpen,
   user,
-  getUsers,
 }: EditModalProps) => {
   const cancelButtonRef = useRef(null);
-  //   const fileRef = useRef<HTMLInputElement>(null);
-  const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     // profilePicture: null,
     name: "",
@@ -65,41 +57,6 @@ const EditModal: React.FC<EditModalProps> = ({
       }));
     }
   }, [user]);
-
-  const handleChangeFunc = (value: string, key: string) => {
-    setState((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
-
-  const editUserHandler = async () => {
-    setLoading(true);
-    try {
-      const payload = {
-        id: user.id,
-        ...state,
-      };
-      const response = await fetch(`${API_URL}/users/${user.id}`, {
-        method: "PATCH",
-        body: JSON.stringify(payload),
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-      const responseJson = await response.json();
-      if (responseJson) {
-        setLoading(false);
-        setOpen(false);
-        toast.success(string.userEditSuccessfully);
-        getUsers();
-      }
-    } catch (error) {
-      setLoading(false);
-      toast.error(string.userEditFailed);
-    }
-  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -140,7 +97,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        {string.editUser}
+                        {string.viewUser}
                       </Dialog.Title>
                     </div>
                     <div
@@ -183,10 +140,9 @@ const EditModal: React.FC<EditModalProps> = ({
                         <Input
                           value={state.name}
                           className="w-full"
-                          onChange={(e) =>
-                            handleChangeFunc(e.target.value, "name")
-                          }
+                          disabled
                           placeholder={string.name}
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
@@ -195,9 +151,8 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="gender"
                           placeholder={string.selectGender}
                           value={state.gender}
-                          onChange={(value) =>
-                            handleChangeFunc(value, "gender")
-                          }
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
@@ -206,9 +161,8 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="emailVerified"
                           placeholder={string.selectEmailVerified}
                           value={state.emailVerified}
-                          onChange={(value) =>
-                            handleChangeFunc(value, "emailVerified")
-                          }
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
@@ -217,9 +171,8 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="status"
                           placeholder={string.selectStatus}
                           value={state.status}
-                          onChange={(value) =>
-                            handleChangeFunc(value, "status")
-                          }
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
@@ -228,7 +181,8 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="city"
                           placeholder={string.selectCity}
                           value={state.city}
-                          onChange={(value) => handleChangeFunc(value, "city")}
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                     </div>
@@ -236,9 +190,8 @@ const EditModal: React.FC<EditModalProps> = ({
                       <Input
                         value={state.email}
                         className="w-full"
-                        onChange={(e) =>
-                          handleChangeFunc(e.target.value, "email")
-                        }
+                        disabled
+                        onChange={() => {}}
                         placeholder={string.email}
                         type="email"
                       />
@@ -246,9 +199,8 @@ const EditModal: React.FC<EditModalProps> = ({
                         <Input
                           value={state.dob}
                           className="w-full"
-                          onChange={(e) =>
-                            handleChangeFunc(e.target.value, "dob")
-                          }
+                          disabled
+                          onChange={() => {}}
                           placeholder={string.dob}
                           type="date"
                         />
@@ -259,9 +211,8 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="profession"
                           placeholder={string.selectProfession}
                           value={state.profession}
-                          onChange={(value) =>
-                            handleChangeFunc(value, "profession")
-                          }
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
@@ -270,42 +221,22 @@ const EditModal: React.FC<EditModalProps> = ({
                           id="country"
                           placeholder={string.selectCountry}
                           value={state.country}
-                          onChange={(value) =>
-                            handleChangeFunc(value, "country")
-                          }
+                          disabled
+                          onChange={() => {}}
                         />
                       </div>
                       <div className="w-full mt-4">
                         <textarea
                           className="p-2 border border-gray-400 rounded w-full"
                           value={state.description}
-                          onChange={(e) =>
-                            handleChangeFunc(e.target.value, "description")
-                          }
+                          disabled
+                          onChange={() => {}}
                           placeholder={string.description}
                           maxLength={200}
                         />
                       </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Button
-                    icon={<TiCancel size={20} color="white" />}
-                    className="bg-[#F86B6C] p-3 rounded-md ml-4 flex items-center"
-                    textClassName="text-white"
-                    title={string.cancel}
-                    disabled={loading}
-                    onClick={() => setOpen(false)}
-                  />
-                  <Button
-                    className="p-3 bg-c_19A7D8 rounded-md"
-                    textClassName="text-white"
-                    title={string.submit}
-                    disabled={loading}
-                    onClick={editUserHandler}
-                  />
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -316,4 +247,4 @@ const EditModal: React.FC<EditModalProps> = ({
   );
 };
 
-export default EditModal;
+export default ViewModal;

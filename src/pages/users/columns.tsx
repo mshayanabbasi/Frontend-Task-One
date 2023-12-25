@@ -1,14 +1,14 @@
-import { useState } from "react";
 import { Button } from "../../components";
-import DeleteModal from "../../components/DeleteModal";
 import string from "../../locales/string";
-import EditModal from "../../components/EditModal";
 import { calculateAge } from "../../utils";
+import { Users } from "../../types/user.types";
 
-export const Columns = () => {
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-
+export const Columns = (
+  setSelectedUser: (user: Users) => void,
+  setDeleteModal: (deleteModal: boolean) => void,
+  setEditModal: (editModal: boolean) => void,
+  setViewModal: (viewModal: boolean) => void
+) => {
   const columnsData = [
     {
       Header: "Name",
@@ -47,6 +47,10 @@ export const Columns = () => {
       accessor: "description",
     },
     {
+      Header: "Email Verified",
+      accessor: "emailVerified",
+    },
+    {
       Header: "Status",
       accessor: "status",
       Cell: ({ row }: any) => {
@@ -69,30 +73,30 @@ export const Columns = () => {
               <Button
                 title={string.view}
                 className="bg-[#FFBF06] p-2 mr-3"
-                onClick={() => {}}
+                onClick={() => {
+                  setSelectedUser(row.original);
+                  setViewModal(true);
+                }}
               />
               <Button
                 title={string.edit}
                 className="bg-[#4BBD72] p-2 mr-3"
                 textClassName="text-white"
-                onClick={() => setEditModal(!editModal)}
+                onClick={() => {
+                  setSelectedUser(row.original);
+                  setEditModal(true);
+                }}
               />
               <Button
                 title={string.delete}
                 className="p-2 bg-[#F86A6A]"
-                onClick={() => setDeleteModal(!deleteModal)}
+                onClick={() => {
+                  setSelectedUser(row.original);
+                  setDeleteModal(true);
+                }}
                 textClassName="text-white"
               />
             </div>
-            {deleteModal ? (
-              <DeleteModal
-                open={deleteModal}
-                setOpen={() => setDeleteModal(false)}
-              />
-            ) : null}
-            {editModal ? (
-              <EditModal open={editModal} setOpen={() => setEditModal(false)} />
-            ) : null}
           </>
         );
       },

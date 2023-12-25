@@ -1,19 +1,49 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import string from "../locales/string";
 import { IoMdClose } from "react-icons/io";
 import Button from "./Button";
+import { toast } from "react-toastify";
+import { API_URL } from "../constants";
 
 interface DeleteModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  id: string;
+  getUsers: () => void;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   open,
   setOpen,
+  id,
+  getUsers,
 }: DeleteModalProps) => {
   const cancelButtonRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
+  const deleteUserHandler = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/users/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const responseJson = await response.json();
+      if (responseJson) {
+        setLoading(false);
+        setOpen(false);
+        toast.success(string.userDeleteSuccessfully);
+        getUsers();
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(string.userDeleteFailed);
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -72,13 +102,15 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                     className="bg-[#F86B6C] p-3 rounded-md ml-4"
                     textClassName="text-white"
                     title={string.delete}
-                    onClick={() => setOpen(false)}
+                    onClick={deleteUserHandler}
+                    disabled={loading}
                   />
                   <Button
                     className="p-3 bg-c_19A7D8 rounded-md"
                     textClassName="text-white"
                     title={string.cancel}
                     onClick={() => setOpen(false)}
+                    disabled={loading}
                   />
                 </div>
               </Dialog.Panel>

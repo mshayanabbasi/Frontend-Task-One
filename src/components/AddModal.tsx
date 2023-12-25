@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import string from "../locales/string";
 import { IoMdClose } from "react-icons/io";
@@ -29,7 +29,6 @@ const AddModal: React.FC<AddModalProps> = ({
   setOpen,
   getUsers,
 }: AddModalProps) => {
-  const cancelButtonRef = useRef(null);
   //   const fileRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
@@ -72,23 +71,18 @@ const AddModal: React.FC<AddModalProps> = ({
       if (responseJson) {
         setLoading(false);
         setOpen(false);
-        toast.success(string.postAddedSuccessfully);
+        toast.success(string.userAddedSuccessfully);
         getUsers();
       }
     } catch (error) {
       setLoading(false);
-      toast.error(string.postAddedFailed);
+      toast.error(string.userAddedFailed);
     }
   };
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-10"
-        initialFocus={cancelButtonRef}
-        onClose={setOpen}
-      >
+      <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -123,7 +117,10 @@ const AddModal: React.FC<AddModalProps> = ({
                         {string.addUser}
                       </Dialog.Title>
                     </div>
-                    <div className="cursor-pointer">
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => setOpen(false)}
+                    >
                       <IoMdClose />
                     </div>
                   </div>

@@ -9,14 +9,20 @@ import AddModal from "../../components/AddModal";
 import string from "../../locales/string";
 import { Columns } from "./columns";
 import { API_URL } from "../../constants";
+import DeleteModal from "../../components/DeleteModal";
+import EditModal from "../../components/EditModal";
+import ViewModal from "../../components/ViewModal";
 
 interface UsersProps {}
 
 const Users: React.FC<UsersProps> = () => {
   const [usersData, setUsersData] = useState([]);
   const [open, setOpen] = useState(false);
-  const columnsData = Columns();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
   const [search, setSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleFetch = async () => {
     fetch(`${API_URL}/users`, {
@@ -37,6 +43,13 @@ const Users: React.FC<UsersProps> = () => {
   useEffect(() => {
     handleFetch();
   }, []);
+  const columnsData = Columns(
+    // @ts-ignore
+    setSelectedUser,
+    setDeleteModal,
+    setEditModal,
+    setViewModal
+  );
 
   const columns = useMemo(() => {
     return columnsData.columnsData;
@@ -84,10 +97,32 @@ const Users: React.FC<UsersProps> = () => {
         </div>
       </div>
       {open ? (
-        <AddModal
-          open={open}
-          setOpen={() => setOpen(false)}
+        <AddModal open={open} setOpen={setOpen} getUsers={handleFetch} />
+      ) : null}
+      {deleteModal ? (
+        <DeleteModal
+          open={deleteModal}
+          setOpen={setDeleteModal}
+          // @ts-ignore
+          id={selectedUser?.id}
           getUsers={handleFetch}
+        />
+      ) : null}
+      {editModal ? (
+        <EditModal
+          open={editModal}
+          setOpen={setEditModal}
+          // @ts-ignore
+          user={selectedUser}
+          getUsers={handleFetch}
+        />
+      ) : null}
+      {viewModal ? (
+        <ViewModal
+          open={viewModal}
+          setOpen={setViewModal}
+          // @ts-ignore
+          user={selectedUser}
         />
       ) : null}
     </div>

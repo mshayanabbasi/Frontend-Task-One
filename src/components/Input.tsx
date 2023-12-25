@@ -7,11 +7,21 @@ interface InputProps {
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   hidden?: boolean;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = React.forwardRef(
   (
-    { type = "text", className = "", value, placeholder, onChange, ...props },
+    {
+      type = "text",
+      className = "",
+      value,
+      placeholder,
+      onChange,
+      disabled,
+      hidden,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -23,6 +33,8 @@ const Input: React.FC<InputProps> = React.forwardRef(
         // @ts-ignore
         ref={ref}
         type={type}
+        hidden={hidden}
+        disabled={disabled}
         {...props}
       />
     );
