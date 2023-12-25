@@ -13,5 +13,16 @@
     "name": "Name",
     "experience": "Experience",
     "email": "Email",
-    "description": "Description"
+    "description": "Description",
+    "dragAndDropYourPictureHereOrBrowseToUpload": "Drag & Drop your picture here or",
+    "browseToUpload": "Browse to upload",
+    "postAddedSuccessfully": "Post Added Successfully!",
+    "postAddedFailed": "Post Added Failed!",
+    "selectCity": "Select City",
+    "selectGender": "Select Gender",
+    "selectCountry": "Select Country",
+    "selectProfession": "Select Profession",
+    "selectStatus": "Select Status",
+    "selectEmailVerified": "Select Email Verified",
+    "dob": "Date of birth"
 }

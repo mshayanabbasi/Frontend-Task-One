@@ -1,4 +1,4 @@
-import React, { Fragment, useRef } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import string from "../locales/string";
 import { IoMdClose } from "react-icons/io";
@@ -6,17 +6,80 @@ import Button from "./Button";
 import Dropdown from "./Dropdown";
 import { TiCancel } from "react-icons/ti";
 import Input from "./Input";
+import { v4 as uuidv4 } from "uuid";
+import {
+  API_URL,
+  CITIES,
+  COUNTRY,
+  EMAIL_VERIFIED,
+  GENDER,
+  PROFESSION,
+  STATUS,
+} from "../constants";
+import { toast } from "react-toastify";
 
 interface AddModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  getUsers: () => void;
 }
 
 const AddModal: React.FC<AddModalProps> = ({
   open,
   setOpen,
+  getUsers,
 }: AddModalProps) => {
   const cancelButtonRef = useRef(null);
+  //   const fileRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({
+    // profilePicture: null,
+    name: "",
+    gender: "",
+    emailVerified: "",
+    status: "",
+    city: "",
+    email: "",
+    dob: "",
+    country: "",
+    profession: "",
+    description: "",
+  });
+
+  const handleChangeFunc = (value: string, key: string) => {
+    setState((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const addUserHandler = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        id: uuidv4(),
+        ...state,
+      };
+      const response = await fetch(`${API_URL}/users`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      const responseJson = await response.json();
+      if (responseJson) {
+        setLoading(false);
+        setOpen(false);
+        toast.success(string.postAddedSuccessfully);
+        getUsers();
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(string.postAddedFailed);
+    }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -66,50 +129,136 @@ const AddModal: React.FC<AddModalProps> = ({
                   </div>
                   <div className="grid grid-cols-12 gap-4 my-4">
                     <div className="col-span-6">
-                      <div>
+                      {/* <div>
                         <Input
-                          value=""
                           onChange={() => {}}
+                          // @ts-ignore
+                          ref={fileRef}
+                          type="file"
+                          hidden
+                        />
+                        <div
+                          className="flex items-center cursor-pointer"
+                          onClick={() => fileRef?.current?.click()}
+                        >
+                          <div className="border-dotted p-3 border border-gray-500 rounded">
+                            <FaCamera size={30} />
+                          </div>
+                          <div className="flex flex-col items-start">
+                            <span className="text-base text-gray-400 font-normal ml-4">
+                              {
+                                string.dragAndDropYourPictureHereOrBrowseToUpload
+                              }
+                            </span>
+                            <span className="text-base text-gray-400 font-normal ml-4">
+                              {string.browseToUpload}
+                            </span>
+                          </div>
+                        </div>
+                      </div> */}
+                      <div className="w-full mt-4">
+                        <Input
+                          value={state.name}
+                          className="w-full"
+                          onChange={(e) =>
+                            handleChangeFunc(e.target.value, "name")
+                          }
                           placeholder={string.name}
                         />
                       </div>
                       <div className="w-full mt-4">
-                        <Dropdown />
-                      </div>
-                      <div className="w-full mt-4 -z-10">
-                        <Dropdown />
+                        <Dropdown
+                          options={GENDER}
+                          id="gender"
+                          placeholder={string.selectGender}
+                          value={state.gender}
+                          onChange={(value) =>
+                            handleChangeFunc(value, "gender")
+                          }
+                        />
                       </div>
                       <div className="w-full mt-4">
-                        <Dropdown />
+                        <Dropdown
+                          options={EMAIL_VERIFIED}
+                          id="emailVerified"
+                          placeholder={string.selectEmailVerified}
+                          value={state.emailVerified}
+                          onChange={(value) =>
+                            handleChangeFunc(value, "emailVerified")
+                          }
+                        />
+                      </div>
+                      <div className="w-full mt-4">
+                        <Dropdown
+                          options={STATUS}
+                          id="status"
+                          placeholder={string.selectStatus}
+                          value={state.status}
+                          onChange={(value) =>
+                            handleChangeFunc(value, "status")
+                          }
+                        />
+                      </div>
+                      <div className="w-full mt-4">
+                        <Dropdown
+                          options={CITIES}
+                          id="city"
+                          placeholder={string.selectCity}
+                          value={state.city}
+                          onChange={(value) => handleChangeFunc(value, "city")}
+                        />
                       </div>
                     </div>
                     <div className="col-span-6">
                       <Input
-                        value=""
-                        onChange={() => {}}
+                        value={state.email}
+                        className="w-full"
+                        onChange={(e) =>
+                          handleChangeFunc(e.target.value, "email")
+                        }
                         placeholder={string.email}
                         type="email"
                       />
                       <div className="w-full mt-4">
                         <Input
-                          value=""
+                          value={state.dob}
                           className="w-full"
-                          onChange={() => {}}
-                          placeholder={string.experience}
+                          onChange={(e) =>
+                            handleChangeFunc(e.target.value, "dob")
+                          }
+                          placeholder={string.dob}
                           type="date"
                         />
                       </div>
                       <div className="w-full mt-4">
-                        <Dropdown />
+                        <Dropdown
+                          options={PROFESSION}
+                          id="profession"
+                          placeholder={string.selectProfession}
+                          value={state.profession}
+                          onChange={(value) =>
+                            handleChangeFunc(value, "profession")
+                          }
+                        />
                       </div>
                       <div className="w-full mt-4">
-                        <Dropdown />
+                        <Dropdown
+                          options={COUNTRY}
+                          id="country"
+                          placeholder={string.selectCountry}
+                          value={state.country}
+                          onChange={(value) =>
+                            handleChangeFunc(value, "country")
+                          }
+                        />
                       </div>
                       <div className="w-full mt-4">
                         <textarea
                           className="p-2 border border-gray-400 rounded w-full"
-                          value=""
-                          onChange={() => {}}
+                          value={state.description}
+                          onChange={(e) =>
+                            handleChangeFunc(e.target.value, "description")
+                          }
                           placeholder={string.description}
                           maxLength={200}
                         />
@@ -124,13 +273,15 @@ const AddModal: React.FC<AddModalProps> = ({
                     className="bg-[#F86B6C] p-3 rounded-md ml-4 flex items-center"
                     textClassName="text-white"
                     title={string.cancel}
+                    disabled={loading}
                     onClick={() => setOpen(false)}
                   />
                   <Button
                     className="p-3 bg-c_19A7D8 rounded-md"
                     textClassName="text-white"
                     title={string.submit}
-                    onClick={() => setOpen(false)}
+                    disabled={loading}
+                    onClick={addUserHandler}
                   />
                 </div>
               </Dialog.Panel>

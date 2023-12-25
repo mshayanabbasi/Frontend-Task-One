@@ -3,13 +3,17 @@ import React from "react";
 interface InputProps {
   type?: string;
   className?: string;
-  value: string;
-  placeholder: string;
+  value?: string;
+  placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  hidden?: boolean;
 }
 
 const Input: React.FC<InputProps> = React.forwardRef(
-  ({ type = "text", className = "", value, placeholder, onChange }, ref) => {
+  (
+    { type = "text", className = "", value, placeholder, onChange, ...props },
+    ref
+  ) => {
     return (
       <input
         value={value}
@@ -19,6 +23,7 @@ const Input: React.FC<InputProps> = React.forwardRef(
         // @ts-ignore
         ref={ref}
         type={type}
+        {...props}
       />
     );
   }

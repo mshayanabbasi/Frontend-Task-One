@@ -1,37 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface DropdownProps {
-  options?: { name: string }[];
-  id?: string;
+  options: string[];
+  id: string;
+  placeholder: string;
+  onChange: (value: string) => void;
+  value: string;
 }
 
-const people = [
-  { name: "Wade Cooper" },
-  { name: "Arlene Mccoy" },
-  { name: "Devon Webb" },
-  { name: "Tom Cook" },
-  { name: "Tanya Fox" },
-  { name: "Hellen Schmidt" },
-];
-
-const Dropdown: React.FC<DropdownProps> = () => {
-  const [selected, setSelected] = useState("");
-
+const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  id,
+  placeholder,
+  onChange,
+  value,
+}: DropdownProps) => {
   return (
     <div className="w-full">
       <select
-        id="countries"
-        onChange={(e) => setSelected(e.target.value)}
-        value={selected}
+        id={id}
+        onChange={(e) => onChange(e.target.value)}
+        value={value}
         className="bg-white border border-gray-300 text-black text-sm rounded block w-full p-3"
       >
-        {people.map((item, index) => {
+        {options.map((item, index) => {
           return (
             <React.Fragment key={`option-${index}`}>
               {index === 0 ? (
-                <option selected={!selected}>Choose a city</option>
+                <option selected={!value}>{placeholder}</option>
               ) : null}
-              <option value={item.name}>{item.name}</option>
+              <option value={item}>{item}</option>
             </React.Fragment>
           );
         })}

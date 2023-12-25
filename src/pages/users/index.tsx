@@ -1,10 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Header, Table } from "../../components";
+
 import { IoMdAdd } from "react-icons/io";
+
+import { Button, Header, Table } from "../../components";
+import AddModal from "../../components/AddModal";
+
 import string from "../../locales/string";
 import { Columns } from "./columns";
-import AddModal from "../../components/AddModal";
+import { API_URL } from "../../constants";
 
 interface UsersProps {}
 
@@ -15,7 +19,7 @@ const Users: React.FC<UsersProps> = () => {
   const [search, setSearch] = useState("");
 
   const handleFetch = async () => {
-    fetch("http://localhost:3030/users", {
+    fetch(`${API_URL}/users`, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -79,7 +83,13 @@ const Users: React.FC<UsersProps> = () => {
           </div>
         </div>
       </div>
-      {open ? <AddModal open={open} setOpen={() => setOpen(false)} /> : null}
+      {open ? (
+        <AddModal
+          open={open}
+          setOpen={() => setOpen(false)}
+          getUsers={handleFetch}
+        />
+      ) : null}
     </div>
   );
 };

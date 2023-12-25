@@ -3,6 +3,7 @@ import { Button } from "../../components";
 import DeleteModal from "../../components/DeleteModal";
 import string from "../../locales/string";
 import EditModal from "../../components/EditModal";
+import { calculateAge } from "../../utils";
 
 export const Columns = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -18,8 +19,12 @@ export const Columns = () => {
       accessor: "email",
     },
     {
-      Header: "Experience",
-      accessor: "experience",
+      Header: "Age",
+      accessor: "dob",
+      Cell: ({ row }: any) => {
+        const dob = calculateAge(row.original.dob);
+        return <span className="text-black text-center">{dob.toString()}</span>;
+      },
     },
     {
       Header: "Gender",
@@ -38,20 +43,8 @@ export const Columns = () => {
       accessor: "profession",
     },
     {
-      Header: "Employability",
-      accessor: "employability",
-    },
-    {
-      Header: "Skill Readiness",
-      accessor: "skillReadiness",
-    },
-    {
-      Header: "Future Readiness",
-      accessor: "futureReadiness",
-    },
-    {
-      Header: "Total Assessment",
-      accessor: "totalAssement",
+      Header: "Description",
+      accessor: "description",
     },
     {
       Header: "Status",
